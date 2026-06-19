@@ -32,6 +32,18 @@ const upload = multer({
 });
 
 const app = express();
+
+// En Vercel (multi-servicio) este backend se sirve bajo el prefijo /_/backend.
+// Si la plataforma reenvía el prefijo, lo sacamos para que las rutas /api/* sigan
+// matcheando. Si no lo reenvía, este middleware es un no-op. Funciona en ambos casos.
+const SERVICE_PREFIX = '/_/backend';
+app.use((req, _res, next) => {
+  if (req.url.startsWith(SERVICE_PREFIX)) {
+    req.url = req.url.slice(SERVICE_PREFIX.length) || '/';
+  }
+  next();
+});
+
 app.use(cors());
 app.use(express.json());
 
