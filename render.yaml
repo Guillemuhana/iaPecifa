@@ -1,0 +1,42 @@
+# ============================================================
+# Blueprint de Render para el BACKEND del Delegado Virtual PECIFA
+# ------------------------------------------------------------
+# Render corre un Express normal (proceso persistente + disco),
+# que es lo que necesitan las dependencias pesadas del backend
+# (@xenova/transformers, tesseract.js, pdf-parse).
+#
+# Cómo usarlo:
+# 1. Entrá a https://render.com y conectá este repo de GitHub.
+# 2. "New +" > "Blueprint" y elegí este repositorio.
+# 3. Render lee este render.yaml y crea el servicio.
+# 4. Cargá los valores de las variables marcadas (sync: false).
+# ============================================================
+services:
+  - type: web
+    name: pecifa-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      # Render inyecta PORT automáticamente; server.js ya lo respeta.
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_PECIFA
+        sync: false
+      - key: EMAIL_REMITENTE
+        value: onboarding@resend.dev
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
