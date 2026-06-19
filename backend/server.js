@@ -253,7 +253,14 @@ app.get('/api/health', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`\n✅ Servidor del Delegado Virtual PECIFA andando en http://localhost:${PORT}`);
-  console.log(`   Modelo: ${MODELO}\n`);
-});
+
+// En Vercel (serverless) NO abrimos un puerto: exportamos la app como handler.
+// En local/Render/Railway sí levantamos el servidor con app.listen.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`\n✅ Servidor del Delegado Virtual PECIFA andando en http://localhost:${PORT}`);
+    console.log(`   Modelo: ${MODELO}\n`);
+  });
+}
+
+export default app;
