@@ -7,7 +7,14 @@
 // La primera vez descarga el modelo (~90MB), después es instantáneo.
 // ============================================================
 
-import { pipeline } from '@xenova/transformers';
+import { pipeline, env } from '@xenova/transformers';
+
+// En serverless (Vercel) el sistema de archivos es de solo lectura salvo /tmp.
+// Redirigimos la caché del modelo ahí para que pueda descargarlo y guardarlo.
+if (process.env.VERCEL) {
+  env.cacheDir = '/tmp/transformers-cache';
+  env.allowLocalModels = false;
+}
 
 let extractor = null;
 
